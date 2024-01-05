@@ -1,0 +1,29 @@
+from scapy.all import rdpcap
+import time
+
+while True:
+
+captured_data = rdpcap('captured_traffic.pcap')
+
+source_ips = [packet[IP].src for packet in captured_data if IP in packet]
+destination_ips = [packet[IP].dst for packet in captured_data if IP in packet]
+
+protocol_types = [packet[IP].proto for packet in captured_data if IP in packet]
+encoded_protocol_types = pd.get_dummies(protocol_types, prefix='protocol_type')
+
+processed_data = pd.DataFrame({
+    'source_ips': source_ips,
+    'destination_ips': destination_ips,
+    'encoded_protocol_types': encoded_protocol_types
+    # Add other features as needed
+})
+
+predictions = model.predict(processed_data)
+
+alert_threshold = 0.8
+alerts = processed_data[predictions > alert_threshold]
+
+alerts.to_csv('alert_log.csv', index=False)
+
+time.sleep(10)  # Adjust the sleep interval as needed
+
