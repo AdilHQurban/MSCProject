@@ -241,6 +241,10 @@ def monitor_network_traffic():
     # Open a live network interface for sniffing
     sniff(prn=process_packet, store=False)
 
+tp, tn, fp, fn = 0, 0, 0, 0
+cumulative_accuracy, cumulative_precision, cumulative_recall, cumulative_f1 = 0, 0, 0, 0
+num_samples = 0
+
 def process_packet(packet):
     global tp, tn, fp, fn, cumulative_accuracy, cumulative_precision, cumulative_recall, cumulative_f1, num_samples
     
@@ -273,8 +277,9 @@ def process_packet(packet):
     
     # Print or log metrics (optional)
     print_metrics()
-    
+
 def print_metrics():
+    global tp, tn, fp, fn, cumulative_accuracy, cumulative_precision, cumulative_recall, cumulative_f1, num_samples
     print(f"True Positives: {tp}, True Negatives: {tn}, False Positives: {fp}, False Negatives: {fn}")
     print(f"Accuracy: {cumulative_accuracy}, Precision: {cumulative_precision}, Recall: {cumulative_recall}, F1-Score: {cumulative_f1}")
     print(f"Total Samples Processed: {num_samples}")
